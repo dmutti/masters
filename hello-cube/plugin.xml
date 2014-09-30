@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<!-- Defines my own custom marker, use the marker view panel to see them when they are created-->
+
+<extension point="org.eclipse.core.resources.markers"
+      id="com.ibm.mymarkers.mymarker"
+      name="My Marker">
+      <super type="org.eclipse.core.resources.textmarker"/>
+      <super type="org.eclipse.core.resources.marker"/>
+      <persistent value="false"/>
+</extension> 
+
+<!--
+<extension point="org.eclipse.ui.popupMenus">
+        <viewerContribution 
+            id="org.eclipse.ui.articles.action.contribution.popup.navigator"
+            targetID="#CompilationUnitEditorContext"> 
+            <action
+                class="hellocube.markers.CreateMarkerAction"
+                id="com.ibm.example.create.marker"
+                label="Create Marker"
+                menubarPath="additions">
+            </action>
+            
+            <action
+                class="hellocube.markers.CountMarkersForFile"
+                id="com.ibm.example.filecount.marker"
+                label="Count Markers"
+                menubarPath="additions">
+            </action> 
+        </viewerContribution>
+    </extension>
+
+      
+    <extension point="org.eclipse.ui.popupMenus">
+        <objectContribution id="Clarity.objectContribution2"
+            objectClass="org.eclipse.jdt.core.IOpenable">
+            <action
+               label="Count Markers"
+               class="hellocube.markers.CountMarkersForFiles"
+               menubarPath="additions"
+               id="com.ibm.example.foldercount.marker">
+            </action>
+        </objectContribution>
+    </extension>
+-->
+   <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+     <specification
+         annotationType="br.usp.each.saeg.code.forest.lowRankAnnotation"
+         icon="icons/empty.gif"
+         colorPreferenceKey="lowRank_color"
+         colorPreferenceValue="192,255,192"
+         contributesToHeader="false"
+         highlightPreferenceKey="lowRank_highlight"
+         highlightPreferenceValue="true"
+         includeOnPreferencePage="true"
+         label="Low Rank Annotation"
+         overviewRulerPreferenceKey="lowRank_overviewRuler"
+         overviewRulerPreferenceValue="true"
+         presentationLayer="0"
+         textPreferenceKey="lowRank_text"
+         textPreferenceValue="true"
+         textStylePreferenceValue="HIGHLIGHTED"
+         verticalRulerPreferenceKey="lowRank_verticalRuler"
+         verticalRulerPreferenceValue="false">
+     </specification>
+   </extension>
+
+    <extension point="org.eclipse.ui.editors.annotationTypes">
+        <type
+            markerSeverity="0"
+            super="org.eclipse.ui.workbench.texteditor.info"
+            name="br.usp.each.saeg.code.forest.lowRankAnnotation"
+            markerType="br.usp.each.saeg.code.forest.marker"/>
+     </extension>
+   
+    <extension point="org.eclipse.ui.editors.markerUpdaters">
+        <updater
+            id="hellocube.markers.MarkerUpdater"
+            class="hellocube.markers.MarkerUpdater"
+            markerType="br.usp.each.saeg.code.forest.marker">
+        </updater>
+    </extension>
+
+<!-- MENU PRINCIPAL 
+    <extension point="org.eclipse.ui.commands">
+        <category
+            name="Code Forest"
+            description="Code Forest"
+            id="br.usp.each.saeg.code.forest.commands.category" />
+        <command
+            categoryId="br.usp.each.saeg.code.forest.commands.category"
+            name="View Project as a Code Forest"
+            description="View Project as a Code Forest"
+            id="br.usp.each.saeg.code.forest.commands.runCodeForest" />
+    </extension>
+    <extension point="org.eclipse.ui.menus">
+        <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+            <menu
+                id="br.usp.each.saeg.code.forest.menu"
+                label="Code Forest">
+                <command
+                    commandId="br.usp.each.saeg.code.forest.commands.runCodeForest"
+                    id="br.usp.each.saeg.code.forest.menu.runCodeForest"
+                    icon="icons/green_cactus.gif" />
+            </menu>
+        </menuContribution>
+    </extension>
+    <extension point="org.eclipse.ui.handlers">
+        <handler
+            commandId="br.usp.each.saeg.code.forest.commands.runCodeForest"
+            class="hellocube.handlers.RunCodeForestHandler"/>
+    </extension>
+-->
+
+    <extension point="org.eclipse.ui.popupMenus">
+        <objectContribution
+            objectClass="org.eclipse.jdt.core.IJavaProject"
+            id="br.usp.each.saeg.code.forest.menu.runCodeForest">
+            <action
+                label="View Project as a Code Forest"
+                icon="icons/green_cactus.gif"
+                enablesFor="1"
+                class="hellocube.actions.RunCodeForestAction"
+                id="hellocube.actions.runCodeForestAction">
+            </action>
+        </objectContribution>
+    </extension>
+  <extension
+        point="org.eclipse.help.contexts">
+     <contexts
+           file="contexts.xml">
+     </contexts>
+  </extension>
+</plugin>

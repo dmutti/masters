@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<!-- Defines my own custom marker, use the marker view panel to see them when they are created-->
+
+<extension point="org.eclipse.core.resources.markers"
+      id="com.ibm.mymarkers.mymarker"
+      name="My Marker">
+      <super type="org.eclipse.core.resources.textmarker"/>
+      <super type="org.eclipse.core.resources.marker"/>
+      <persistent value="true"/>
+</extension> 
+ 
+<extension point="org.eclipse.ui.popupMenus"> 
+        <viewerContribution 
+            id="org.eclipse.ui.articles.action.contribution.popup.navigator"
+            targetID="#CompilationUnitEditorContext"> 
+            <action
+                class="hellocube.markers.CreateMarkerAction"
+                id="com.ibm.example.create.marker"
+                label="Create Marker"
+                menubarPath="additions">
+            </action>
+            
+            <action
+                class="hellocube.markers.CountMarkersForFile"
+                id="com.ibm.example.filecount.marker"
+                label="Count Markers"
+                menubarPath="additions">
+            </action> 
+        </viewerContribution>
+    </extension>
+      
+    <extension point="org.eclipse.ui.popupMenus">
+        <objectContribution id="Clarity.objectContribution2"
+            objectClass="org.eclipse.jdt.core.IOpenable">
+            <action
+               label="Count Markers"
+               class="hellocube.markers.CountMarkersForFiles"
+               menubarPath="additions"
+               id="com.ibm.example.foldercount.marker">
+            </action>
+        </objectContribution>
+    </extension>
+
+   <extension point="org.eclipse.ui.editors.markerAnnotationSpecification"
+     id="myannotationspecification"
+     name="MyAnnotation2">
+
+     <specification
+         annotationType="com.ibm.myannotation"
+         colorPreferenceKey="com.ibm.myannotation.slice.color"
+         colorPreferenceValue="255,0,0"
+         contributesToHeader="false"
+         highlightPreferenceKey="com.ibm.myannotation.slice.highlight"
+         highlightPreferenceValue="true"
+         includeOnPreferencePage="true"
+         label="MyAnnotation 2"
+         overviewRulerPreferenceKey="com.ibm.myannotation.slice.overview"
+         overviewRulerPreferenceValue="true"
+         presentationLayer="0"
+         textPreferenceKey="com.ibm.myannotation.slice.text"
+         textPreferenceValue="true"
+         textStylePreferenceValue="HIGHLIGHTED"
+         verticalRulerPreferenceKey="com.ibm.myannotation.slice.ruler"
+         verticalRulerPreferenceValue="true">
+     </specification>
+   </extension>
+
+    <extension point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerSeverity="0"
+            super="org.eclipse.ui.workbench.texteditor.info"
+            name="com.ibm.myannotation"
+            markerType="com.ibm.mymarkers.mymarker"/>
+   </extension>
+   
+  <extension point="org.eclipse.ui.editors.markerUpdaters">
+      <updater
+            id="com.ibm.example.MarkerUpdater"
+            class="hellocube.markers.MarkerUpdater"
+            markerType="com.ibm.mymarkers.mymarker">
+      </updater>
+  </extension>
+  <extension
+        point="org.eclipse.ui.perspectiveExtensions">
+     <perspectiveExtension
+           targetID="org.eclipse.jdt.ui.JavaPerspective">
+        <view
+              id="hellocube.views.SampleView"
+              ratio="0.5"
+              relationship="right"
+              relative="org.eclipse.ui.views.ProblemView">
+        </view>
+     </perspectiveExtension>
+  </extension>
+  <extension
+        point="org.eclipse.help.contexts">
+     <contexts
+           file="contexts.xml">
+     </contexts>
+  </extension>
+</plugin>

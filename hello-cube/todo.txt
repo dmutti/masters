@@ -1,0 +1,5 @@
+colocar a code forest como um menu { "Ver projeto como Code Forest", "Remover visualização de floresta" }
+colocar o parse do arquivo xml
+ver se a linha do arquivo xml bate com o que o AST devolve
+fazer os outros 4 tipos de highlight (baixo medio, medio, alto medio, alto)
+como fazer a code forest comunicar com o editor???
