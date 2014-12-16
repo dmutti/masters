@@ -1,0 +1,697 @@
+This chapter describes the set up, implementation, and execution of an
+exploratory experiment. Our goal was to observe how the CodeForest plug-in would
+be used by developers commissioned with the task of investigating a piece of
+software containing a defect that made unit tests fail.
+To accomplish that goal, four individuals with different proficiency levels in
+Java and unit tests were selected.
+The volunteers that took part in the experiment received two distinct
+investigative tasks: the Thoughtworks XStream~\cite{walnes2005xstream} (referred
+to XStream from now on) object serialization framework and the Apache
+Commons-Math~\cite{commons2013math} (referred to Commons Math from now on)
+library. The assigned order of tasks varied from volunteer to volunteer, though
+the defects were always the same.
+
+The following sections details the whole process employed to realize the
+experiments and their outcomes.
+
+\section{Experimental design}
+
+In what follows, we discuss the research questions prepared in advance,
+the desired participants' profile, the objects, and the procedure employed to
+carry out the experiment.
+
+\subsection{Research questions}
+
+This section starts with the the questions that we wanted to answer through the
+experiments. They were the following:
+\begin{itemize}
+  \item Is the metaphor adequate to the problem of locating defects?
+  \item Are the tools embedded within the plug-in useful?
+  \item Are there tools more useful than others? If so, which ones?
+  \item What is the dynamics between the developer and the tool when he/she
+  is trying to locate defects?
+\end{itemize}
+
+\subsection{Participants}
+
+In order to answer these questions we set up, implemented, and executed an
+exploratory experiment. It began with the definition of the target audience, the
+kind of people that would use the CodeForest plug-in. As previously explained, the
+CodeForest plug-in is hosted by the Eclipse Platform.
+This way,  participants would have to, at least, be willing to investigate a
+codebase written in Java, using the Eclipse IDE. Also, since this research
+proposes a new way to display fault localization data, it is desirable that
+volunteers had previous knowledge in debugging techniques. Four individuals from
+the Software Analysis \& Experimentation Group (SAEG) volunteered to be part of
+the experiment.
+
+\subsection{Objects}
+
+The preparation of the experiment demanded the identification of programs to be
+debugged. The software that was going to be presented to developers, the
+debuggee, must have a) JUnit~\cite{gamma2006junit} tests---that is the input of the
+INSS~\cite{souza2012depuracao} library, which calculates the suspiciousness
+value of software elements (an in-depth explanation on this subject is available
+in Section~\ref{sec:bg-codecoverage}); and b) tests that test small units of
+code, so they can enable developers to narrow their search to suspicious lines
+of code, instead of coarser structures, such as methods or classes.
+
+Besides those restrictions, questions of technical nature arise specifically
+related to the troubled code: a) which defect would be embedded on the software? b)
+should it be artificial (introduced via random modifications in the source
+code) or real (from a ticket in a bug tracking system)? c) something
+simple as a misplaced operator or difficult as a missing line of code?
+
+To gain as much insight as possible from the experiment, each developer would
+have to spot the defective line in two different scenarios: a misplaced operator
+planted in XStream, inspired by~\cite{campos2012gzoltar}; and a real missing
+``if''clause, mined from the Subversion history of the Commons Math project.
+These projects were selected based on their quantity of JUnit tests, coverage
+data, and their complementary nature. XStream builds a long chain of invoked
+methods to (de)serialize objects. Commons Math, on the other hand, is comprised
+of several independent methods, and most of them are implementations of
+mathematical functions.
+
+Commons Math is made of 26,202 lines of code, of which 92\% covered by
+1,172 unitary tests (124,523 instructions of 135,331) according to
+Eclemma---a Java coverage tool for Eclipse~\cite{hoffmann2009eclemma}.
+The same tool reported XStream as less covered: 85\% by 1,492 test
+cases (72,322 instructions of 84,589) in a total of 25,385 lines of code.
+
+\subsection{Procedure}
+
+This subsection describes the procedures utilized to collect the data analyzed
+in this experiment.
+
+\subsubsection{Training}
+
+Firstly, we carried out a training session that every participant attended
+before engaging into any debugging session.
+The slides used in this activity can be found on Appendix~\ref{ch:appendix3}. It
+focused on the transmission of core concepts involving this research, such as
+code coverage, visual debugging, the experiment that was going to happen, and
+the plug-in itself. The explanation took no more than thirty minutes and was
+available for consultation (as an electronic document) during the whole
+experiment.
+
+\subsubsection{Environment}
+
+The environment where the experiment was conducted is described below.
+
+\begin{itemize}
+  \item The participant remains alone in the room, and is free to abandon the
+  experiment at any time.
+  \item The experiment is divided into two parts. In each one of them, the
+  participant have to point the line of code (or the absence of it) that caused
+  the defect to occur.
+  \item The defect does not need to be corrected.
+  \item The first task of the experiment is the XStream (or Commons Math).
+  \item Once started, the participant has sixty minutes to find the defect.
+  \item When the participant reaches a conclusion, the second part begins. It
+  works as the first part, except that this time, the task has a maximum
+  duration of thirty minutes.
+  \item By the end of the experiment, the participant is asked to fill a
+  questionaire (Appendix~\ref{ch:appendix1}) and report any suggestions or
+  corrections.
+\end{itemize}
+
+The first task had the double of the duration of the second duration to
+allow participants to move up the learning curve. Our assumption was that these extra
+thirty minutes would be enough to go from ``complete uncertainty'' about the
+experiment to a level of certain confidence in it.
+
+The computer used to perform the tasks was a MacBook Pro with a 13-inch display
+equipped with a secondary 20-inch display. Volunteers were advised to run
+Eclipse on the notebook screen and the CodeForest (if opened) on the 20-inch
+screen.
+
+All participants selected to take part in the experiment were asked to read and
+sign the document ``Informed Consent Form'' in advance, which gave us permission
+to collect data and use it on scientific publications, as long as participants
+remain anonymous. An exact copy of the document is available on
+Appendix~\ref{ch:appendix2}.
+
+\subsubsection{Data collection}
+
+Part of the answers to the questions formulated at the beginning of this chapter
+are the actions performed by users when interacting with the plug in. In order
+to collect this data, we opted to perform an instrumentation that would log
+significant actions taken by developers. This modification should suffice to
+understand the behavior of the person who is interacting with the plug-in. These
+were the events logged during usage:
+
+\begin{itemize}
+  \item Keystrokes pressed during the navigation in the forest.
+  \item Mouse interactions with the elements of the forest.
+  \item Start and end of debugging sessions.
+  \item Addition or removal of breakpoints.
+  \item Clicks on items of the roadmap.
+  \item Changes applied in filters (text and/or score).
+\end{itemize}
+
+The questionnaire (Appendix~\ref{ch:appendix1}) participants were asked to fill
+contains 25 questions, 20 of which have their options modeled as a five-degree
+Likert scale~\cite{albaum1997likert}, varying from ``Strongly disagree'' to
+``Strongly agree''. They inquire about aesthetics, usage and general perception
+of the tool. The remaining 5 questions are related to the experience of the
+participant, with options such as ``none'', ``0 to 2 years'', and so on.
+The questions that comprised the questionnaire were non-standard and, in
+the future, should be replaced by standardized ones. This is necessary to
+avoid inducing positive or negative bias in the answers.
+
+\section{Pilot experiment}
+
+Our pilot experiment served as a ``validation of the experiment design''.
+The participant, a Master's student, had approximately one year of professional
+experience in development of enterprise Java programs, investigation and
+correction of defects in code authored by others.
+
+The plug-in operated during the pilot experiment had two implementations of the
+3D forest environment. One, operated with a mouse, was basically a port of the
+original forest environment found in the CodeForest prototype
+(Chapter~\ref{ch:forest}).
+Other, operated with a keyboard and mouse, was developed after suggestions made
+by an expert in the field of 3D Human-Computer Interaction (HCI) that evaluated
+the prototype.
+
+\subsection{XStream}
+
+The participant related an attempt to start the defect investigation with the
+CodeForest Mouse View but quit it shortly after the beginning, claiming
+that it was too difficult to operate (the time spent on this attempt was
+ignored during result compilation phase). Next, he opened the CodeForest
+Keyboard View and continued the task using that environment. He failed to
+find the defect on the first thirty minutes and, when asked, agreed to
+extend the task.
+
+It took a total of thirty four minutes to complete the first task. He spent
+nearly one and a half minute exploring the forest; selected elements of the
+roadmap seventeen times, and clicked eight times on thorns. He also spent
+approximately twenty minutes debugging the code. In the end, the volunteer
+succeeded to point the exact line that originated the defect.
+
+\subsection{Commons Math}
+
+After successfully completing the first task, the volunteer received the next
+challenge. The defect in question was caused by the absence of an ``if''
+statement in the Commons Math codebase. This framework differs from the XStream
+in the sense that it is made of several independent units, with little or no
+relation amongst themselves. This structure creates a shorter chain of methods
+to be analyzed. It did not make the task easier, though. The number of classes
+and methods found in the framework confuses developers that are not used to its
+source code.
+
+He spent a total of thirteen minutes to complete this task. Nearly two minutes
+were spent interacting with the forest. He selected elements of the roadmap
+sixteen times, and clicked nineteen times on thorns. This time, the volunteer
+spent two and a half minutes debugging. In the end, the volunteer succeeded to
+point the exact line that originated the defect.
+
+\subsection{Summary}
+
+The participant was able to point the line containing the defect on both
+frameworks investigated. Table~\ref{tab:pilot_summary} summarizes data collected
+from instrumentation logs of the two debugging sessions.
+The header indicates the library under investigation, namely XStream and Commons
+Math. Underlined items are the events that were logged during the experiment.
+Below each item there is one or more numbers, and on the left of each number, a
+short description of the aspect being summarized. Finally, the footer contains
+the answer to the question ``Was the defect found?''. Following, there is a
+brief explanation of each event and their respective aspects that were
+considered in this research.
+
+\begin{itemize}
+    \item \textbf{CodeForest} refers to the events that happened inside the
+    three-dimensional virtual forest. ``Time exploring'' is the total amount, in
+    minutes, spent navigating through the forest; ``Movements'' is the number of
+    keys pressed to move the virtual camera, like moving it forwards or upwards.
+    \item \textbf{Debugging} refers to the debugging activity, i.e., the
+    execution of lines of code, one statement at a time. ``Time spent'' is the
+    sum of all time spent by the volunteer on this activity. ``Events'' is
+    how many times the user started and ended a debugging session.
+    \item \textbf{Breakpoints} refers to the act of adding or removing
+    breakpoints into the code. A breakpoint is a point in space (line of code)
+    where the debugger pauses the execution, so the user can inspect the runtime
+    state of the program.
+    \item \textbf{Roadmap} refers to how many times (``Events") the user clicked
+    on elements of the roadmap, presented as a table on the bottom of the
+    screen.
+    This number is absolute; two clicks on the same item counts as two events.
+    \item \textbf{Trimmer} refers to the filtering tools that allows users to
+    filter elements of the forest based on suspiciousness and text. This is
+    intended to enhance focus by reducing the number of elements (cacti,
+    branches, and thorns) being displayed. ``Adjustments (text and score)'' is
+    the number of times that the user made adjustments on the parameters of the
+    filter: minimum and maximum score and text. This number is not related to
+    the ``Roadmap'' functionality, which also triggers changes on filters.
+    \item \textbf{Elements} refers to the elements of the forest that were
+    clicked by the user. When the user interacts with a cactus, the IDE opens a
+    window with the cursor positioned at the first line of the file represented
+    by the cactus. A similar behavior happens when branches or thorns are
+    clicked.
+    \item \textbf{Reset} refers to the number of times (``Events'') that the
+    user pressed the key to reset the forest. This functionality acts as a
+    ``panic button". It repositions the camera, and redefines the trimmer
+    (minimum, and maximum score, and text filters) to their original values,
+    respectively ``0.0'', ``1.0'' and empty text.
+    \item \textbf{Task} refers to the total time, in minutes, necessary to
+    complete the proposed task.
+\end{itemize}
+
+\begin{table}[!ht]
+\caption{Pilot experiment summary}
+\begin{tabular}{r | c  c |}
+    \cline{2-3}
+    & \textbf{XStream} & \textbf{Commons}\\
+    & & \textbf{Math}\\\cline{2-3}
+    & \multicolumn{2}{c |}{\underline{CodeForest}}\\
+    Time exploring & 01:14 & 02:43\\
+    Movements & 637 & 355\\
+    & \multicolumn{2}{c |}{\underline{Debugging}}\\
+    Time spent & 20:31 & 02:34\\
+    Events & 14 & 4\\
+    & \multicolumn{2}{c |}{\underline{Breakpoints}}\\
+    Added & 10 & 1\\
+    Removed & 7 & 0\\
+    & \multicolumn{2}{c |}{\underline{Roadmap}}\\
+    Events & 17 & 16\\
+    & \multicolumn{2}{c |}{\underline{Trimmer}}\\
+    Adjustments (text and score) & 45 & 2\\
+    & \multicolumn{2}{c |}{\underline{Elements}}\\
+    Cacti & 12 & 4\\
+    Branches & 1 & 1\\
+    Thorns & 8 & 19\\
+    & \multicolumn{2}{c |}{\underline{Reset}}\\
+    Events & 5 & 0\\
+    & \multicolumn{2}{c |}{\underline{Task}}\\
+    Duration & 34:00 & 13:00\\ \cline{2-3}
+    & \multicolumn{2}{c |}{\underline{}}\\
+    Defect found? & Yes & Yes\\ \cline{2-3}
+\end{tabular}
+\label{tab:pilot_summary}
+\end{table}
+
+Table~\ref{tab:pilot_answers}, described in Appendix~\ref{ch:appendix4},
+contains the answers provided after finishing the tasks.
+
+The feedback provided by the volunteer motivated changes in some characteristics
+of the plug-in that were implemented based on unconfirmed assumptions. One of
+the feedbacks questioned the divergence between the behavior of up and down
+arrows (to move forwards and backwards) and left and right arrows (to move the
+neck).
+Based on that, we changed the behavior of the left and right keys to move the
+observer laterally when pressed.
+
+Another characteristic that was modified motivated by the feedback was the
+approach utilized by the plug-in to generate the CodeForest. The participant
+utilized a version that rendered the whole codebase as cacti, including
+statements, methods and classes that were not exercised by unit tests. In his
+opinion, this feature cluttered the visualization, undermined the performance
+(due to the quantity of objects on the scene), and diverted his attention to
+elements that were not relevant in the context of the defect being investigated.
+
+Other suggestions need further confirmation due to the fact that they affect the
+basis of the metaphor, such as changing the positioning strategy of the
+branches. In the participant's opinion, instead of being arranged by their
+suspiciousness, branches ought to be arranged by their position in the source
+code.
+
+\section{Experiments}\label{sec:experiments}
+
+After performing the adjustments that emerged from the pilot experiment and
+improving the user interface, we started the preparations for another round of
+experiments. These experiments happened on the same day, one after another, and
+followed the same dynamics applied on the pilot experiment.
+
+Every participant did the experiment on the same place, using the same machine
+(a 13-inch MacBook Pro with a 20-inch extra monitor), had the same training and
+the same challenges: to find the defect on the XStream and the Commons Math
+frameworks. Two participants started with the XStream and finished with the
+Commons Math framework. The remaining one did the opposite; he started with the
+Commons Math and ended with the XStream framework.
+
+\subsection{Experiment \# 1}
+
+Participant \#1, a Master's student with a bachelor's degree in Applied
+Mathematics, was the most unexperienced of all participants. He had a strong
+background in C programming in Linux environment, but no practice in Java and
+modern development tools. The lack of experience imposed certain difficulties to
+execute the experiment, due to its demand for a minimum set of skills. The
+training given to the volunteer had a wider content to cover the bare minimum
+requirements to perform the tasks. An in-depth training in topics such as Java
+programming, Eclipse IDE, and debugging was out of scope.
+
+The first task given to the user was to investigate the XStream framework. After
+fifty five minutes, he ended the first task and claimed that he had found the
+erroneous statement. Though the statement chosen was a part of the path of calls
+that lead to the defect, it was not the correct location.
+
+The following task, Commons Math, had a duration of twenty two minutes. Again,
+the participant did not spot the location, but this time he was able to point
+the class where the defect happened.
+
+In general, the participant had a difficult time to perform the tasks. He
+reported problems with basic actions, such as starting a debug session or
+adding a breakpoint in the source code. Furthermore, there was the immediate
+barrier imposed by the need to debug code written in a programming language that
+was not completely understood by him.
+
+This is, in our opinion, a positive result. A developer with no Java,
+JUnit, Eclipse IDE, or industrial experience was able to find the trail leading
+to both defects using the plug-in.
+
+To investigate the XStream (Table~\ref{tab:experiment1_summary}), the
+participant spent almost three minutes exploring the forest; he clicked eleven
+cacti and nine branches, and selected elements of the roadmap thirteen times;
+he also had to reset the view eight times. Total time spent debugging: almost six
+minutes. Continuing the experiment, the volunteer dedicated almost one minute to
+explore the Commons Math forest, picking one cactus and twelve branches; six
+elements of the roadmap were selected, and two resets of the view fired. The
+time dedicated debugging the code is very similar to the previous task, six minutes.
+
+\begin{table}[!ht]
+\caption{Experiment \# 1 summary}
+\begin{tabular}{r | c  c |}
+    \cline{2-3}
+    & \textbf{XStream} & \textbf{Commons}\\
+    & & \textbf{Math}\\\cline{2-3}
+    & \multicolumn{2}{c |}{\underline{CodeForest}}\\
+    Time exploring & 02:35 & 00:48\\
+    Movements & 1144 & 374\\
+    & \multicolumn{2}{c |}{\underline{Debugging}}\\
+    Time spent & 06:25 & 05:52\\
+    Events & 1 & 1\\
+    & \multicolumn{2}{c |}{\underline{Breakpoints}}\\
+    Added & 6 & 6\\
+    Removed & 4 & 4\\
+    & \multicolumn{2}{c |}{\underline{Roadmap}}\\
+    Events & 13 & 6\\
+    & \multicolumn{2}{c |}{\underline{Trimmer}}\\
+    Adjustments (text and score) & 1 & 0\\
+    & \multicolumn{2}{c |}{\underline{Elements}}\\
+    Cacti & 11 & 1\\
+    Branches & 9 & 12\\
+    Thorns & 0 & 0\\
+    & \multicolumn{2}{c |}{\underline{Reset}}\\
+    Events & 8 & 2\\
+    & \multicolumn{2}{c |}{\underline{Task}}\\
+    Duration & 42:00 & 24:00\\ \cline{2-3}
+    & \multicolumn{2}{c |}{\underline{}}\\
+    Defect found? & No & No\\ \cline{2-3}
+\end{tabular}
+\label{tab:experiment1_summary}
+\end{table}
+
+From the participant's answers (Table~\ref{tab:experiment_1_answers}
+- Appendix~\ref{ch:appendix4}), overall experience was consistently good, with
+few points of attention. According to him, the way the observer moves amongst
+cacti in the forest is neither good nor bad, same rank given to the quality of
+information structure.
+
+The modifications suggested by the volunteer were: a keyboard shortcut that
+automatically changes the focus to the forest; a way to turn the interactions
+between mouse and keyboard more seamless, making them more interchangeable
+amongst themselves.
+
+\subsection{Experiment \# 2}
+
+Participant \#2 was an undergraduate student in Information Systems. He had
+good, though not industrial, coding skills in Java and JUnit. His ability
+to debug software using the Eclipse IDE needs further improvement, due to the
+extensive use of ``print'' calls to inspect elements and to follow the
+software's execution flow. This technique brings significant risks to the
+debugging process, because it introduces unnecessary code to the existing
+codebase. Worst, this can change the way the software behaves and
+introduce new defects.
+
+The experiment started with the investigation of the Commons Math framework.
+After forty two minutes, the volunteer claimed he had solved the first task.
+Just as his predecessor, the spotted location was not the one causing the
+defect. To complete this task, the volunteer spent forty seconds exploring the
+forest; he clicked four thorns, selected elements of the roadmap twenty two
+times and debugged for two minutes.
+
+As for the second task, by the end of thirty seven minutes, the candidate was
+not able to point the location of the defect. He interacted with the XStream
+forest during one and a half minute, clicked six cacti and twelve thorns; he
+also selected elements of the roadmap twenty three times, and fired one reset of
+the view. His debug sessions lasted ten minutes. Usage statistics obtained from
+instrumentation logs are available on Table~\ref{tab:experiment2_summary}.
+
+\begin{table}[!ht]
+\caption{Experiment \# 2 summary}
+\begin{tabular}{r | c  c |}
+    \cline{2-3}
+    & \textbf{Commons} & \textbf{XStream}\\
+    & \textbf{Math} & \\\cline{2-3}
+    & \multicolumn{2}{c |}{\underline{CodeForest}}\\
+    Time exploring & 00:37 & 01:14\\
+    Movements & 283 & 370\\
+    & \multicolumn{2}{c |}{\underline{Debugging}}\\
+    Time spent & 01:36 & 10:04\\
+    Events & 6 & 13\\
+    & \multicolumn{2}{c |}{\underline{Breakpoints}}\\
+    Added & 7 & 9\\
+    Removed & 6 & 9\\
+    & \multicolumn{2}{c |}{\underline{Roadmap}}\\
+    Events & 22 & 23\\
+    & \multicolumn{2}{c |}{\underline{Trimmer}}\\
+    Adjustments (text and score) & 0 & 0\\
+    & \multicolumn{2}{c |}{\underline{Elements}}\\
+    Cacti & 0 & 6\\
+    Branches & 0 & 0\\
+    Thorns & 4 & 12\\
+    & \multicolumn{2}{c |}{\underline{Reset}}\\
+    Events & 0 & 1\\
+    & \multicolumn{2}{c |}{\underline{Task}}\\
+    Duration & 41:00 & 35:00\\ \cline{2-3}
+    & \multicolumn{2}{c |}{\underline{}}\\
+    Defect found? & No & No\\ \cline{2-3}
+\end{tabular}
+\label{tab:experiment2_summary}
+\end{table}
+
+
+From the participant's answers (Table~\ref{tab:experiment_2_answers} -
+Appendix~\ref{ch:appendix4}), overall experience was good, although the main
+features provided by CodeForest (positioning, filtering and roadmap) were
+considered neutral, i.e, they did not help neither got in the way of the
+participant during the investigation. The low ratio between forest navigation
+and experiment duration suggests that the volunteer possibly ignored the plug-in
+and took advantage of the roadmap to set a starting point for investigation; a
+location where he could place ``print'' statements in order to analyse the
+problem. He also emphasized in his feedback the need to make thorns easier to
+click.
+
+\subsection{Experiment \# 3}
+
+Participant \#3 had the largest development experience of all four volunteers. A
+Master's student with an Information Systems diploma; more than six years of
+experience with Java and the Eclipse IDE environment; between four and six years
+of professional Java experience, and  JUnit framework. Not only he was able to spot the
+defects' exact location, but he also corrected them, making failing JUnit
+test cases pass again.
+
+The first task, XStream, demanded twenty five minutes from the volunteer, the
+lowest time of all participants. He explored the forest for thirty seconds,
+selected six cacti, five branches and two thorns; selected three elements from
+the roadmap list, and debugged for seven minutes.
+
+As for the Commons Math task, the time needed to complete it was even shorter
+than the previous task: fifteen minutes.
+The CodeForest was explored for about one minute; the participant selected four
+cacti, three branches and ten thorns; he selected fifteen roadmap items, and
+debugged for three minutes. These, and other data collected during the
+experiment are available on Table~\ref{tab:experiment3_summary}.
+
+\begin{table}[!ht]
+\caption{Experiment \# 3 summary}
+\begin{tabular}{r | c  c |}
+    \cline{2-3}
+    & \textbf{XStream} & \textbf{Commons}\\
+    & & \textbf{Math}\\\cline{2-3}
+    & \multicolumn{2}{c |}{\underline{CodeForest}}\\
+    Time exploring & 00:28 & 00:53\\
+    Movements & 542 & 527\\
+    & \multicolumn{2}{c |}{\underline{Debugging}}\\
+    Time spent & 07:36 & 02:38\\
+    Events & 4 & 3\\
+    & \multicolumn{2}{c |}{\underline{Breakpoints}}\\
+    Added & 2 & 2\\
+    Removed & 0 & 0\\
+    & \multicolumn{2}{c |}{\underline{Roadmap}}\\
+    Events & 3 & 15\\
+    & \multicolumn{2}{c |}{\underline{Trimmer}}\\
+    Adjustments (text and score) & 0 & 133\\
+    & \multicolumn{2}{c |}{\underline{Elements}}\\
+    Cacti & 6 & 4\\
+    Branches & 5 & 3\\
+    Thorns & 2 & 10\\
+    & \multicolumn{2}{c |}{\underline{Reset}}\\
+    Events & 0 & 0\\
+    & \multicolumn{2}{c |}{\underline{Task}}\\
+    Duration & 22:00 & 17:00\\ \cline{2-3}
+    & \multicolumn{2}{c |}{\underline{}}\\
+    Defect found? & Yes & Yes \\ \cline{2-3}
+\end{tabular}
+\label{tab:experiment3_summary}
+\end{table}
+
+At the end of the experiment, the participant's opinion about the plug-in was
+very positive (Table~\ref{tab:experiment_3_answers} -
+Appendix~\ref{ch:appendix4}), even though he reported having some trouble moving
+amongst elements in the forest. He also considered the forest having low utility in the
+task of locating defects. We believe that this opinion is related to the strong
+experience possessed by the volunteer on writing and debugging software, which
+possibly makes the visualization to be a desirable, although non essential, clue
+to locate the defect.
+
+\section{Answers}\label{sec:answers}
+
+The results from the validation experiment were gathered together with the
+results from the other three experiments. This could never happen in a
+meticulous study, but in this research we chose to do it. The reason is that
+our intent was to perform an exploratory---instead of a quantitative---analysis of
+the tool. The goal was to have insights, gather opinions and discover new ways
+that could lead to improvements in the plug-in.
+
+Appendix~\ref{ch:appendix5} contains charts that summarizes the answers provided to
+the questions presented to volunteers, described in Appendix~\ref{ch:appendix1}.
+Figures \ref{fig:summary-charts-1}, \ref{fig:summary-charts-2}, and
+\ref{fig:summary-charts-3} show the answers to the questions related to user
+experience, feature utilization and impressions about the tool.
+Figure~\ref{fig:summary-charts-4} sums up the answers regarding the expertise
+level of each developer on each skill.
+
+From the answers it was possible to infer that volunteers had a good experience
+utilizing the tool. They manifested the same opinion when asked to evaluate
+presentation characteristics, such as font size and the quality of information
+structure. One aspect of the metaphor---painting and positioning branches
+according to their score---received divergent evaluations and requires further
+experimentation. Except for that, the rationale behind the metaphor---the
+representation of the codebase as a forest, lines of code as thorns, and classes
+as cacti---was well accepted by participants and received high scores.
+
+A key feature, the navigation within the CodeForest and its elements, demands
+improvements. Volunteers reported troubles when they tried to explore the
+forest; this  creates a barrier between the participant and the metaphor,
+affects the amount of time dedicated to navigation and their opinion about the
+helpfulness provided by the tool to locate defects. Despite navigation issues,
+functional and non-functional requirements as performance, easiness to perform
+actions, and the interaction with elements of the forest were well ranked by
+participants.
+
+Volunteers took the roadmap as something not related to filter tools (trimmer
+and text search). From utilization logs and interviews, participants heavily relied
+on roadmap items to investigate the defect's location, without realizing that
+when they clicked something, both trimmer and text search parameters were
+updated based on roadmap information. This action trimmed off forest elements
+that did not match the constraints provided. They did not realize---which
+possibly justifies the low scores---that they were extensively filtering content
+by selecting roadmap items.
+
+Finally, participants were unanimous to point that they considered visual
+debugging of programs a very important topic in the Software Engineering field
+of study. These answers contrasted with a related question, which inquired
+participants whether they would always utilize the plug-in when available. Some
+hypothesis arise from this contrast: the forest metaphor might be inadequate to
+the problem in question; or perhaps the metaphor is good enough, but its
+realization was poorly executed; or maybe our choice of defects was not
+sufficient to convince developers of the aid that could have been provided by
+the tool. These questions opens new paths for further research and possible ways
+to improve the tool.
+
+\section{Threats to validity}
+
+The fundamental question about the results of every research is: ``How
+valid are they?''. The validity is affected by four types of threats: external, internal,
+construct, and conclusion. In this section, we analyze the threats to the
+validity of the exploratory experiment conducted in this research.
+
+\subsection{External validity}
+
+External validity refers to the ability to generalize the study findings to
+other people or settings. The findings in this research cannot be generalized
+beyond the group of people that took part in the experiment. This accomplishment
+would require more participants and a meticulous experimental design. For
+example: we could ask participants to debug with and without the CodeForest; or
+with and without certain tools embedded within the plug-in.
+
+\subsection{Conclusion validity}
+
+Conclusion validity is the degree to which conclusions we reach about
+relationships in our data are reasonable. The goal of our exploratory experiment
+was to assess how the features embedded within the CodeForest plug-in were
+perceived by the participants. This way, the summary extracted from the data of
+every debugging session captures the way participants utilized the tool.
+Furthermore, we asked them to fill a questionnaire in order to measure their
+opinion about the plug-in after utilizing it. Hence, it is possible to evaluate
+how participants utilized the CodeForest.
+
+\subsection{Internal validity}
+
+Internal validity is concerned with the extent to which the design of the
+study allows us to attribute causality to the intervention and to rule out
+potential alternative explanations. In our case, there are influences from other
+factors. The previous experience of a participant plays an important role in the
+way he or she utilizes the tool. Moreover, all volunteers are part of the same
+research group, the Software Analysis \& Experimentation Group (SAEG).
+
+\subsection{Construct validity}
+
+Construct validity is concerned with the relationship between theory and
+observation; more specifically whether a test measures the intended construct.
+It examines the question: ``Does the measure behave like the theory says a
+measure of that construct should behave?''. Our experiment intended to perform
+an exploratory study of the CodeForest. This way, there was no need to compare
+measurements, but only the utilization of the tool itself. Hence, we do not
+incur into effects of combination of treatments neither sub-representation of
+the experiment. However, participants may have taken an additional effort to
+utilize the tool, something that might have not been done during normal
+utilization.
+
+\section{Final remarks}
+
+This chapter described the steps taken to plan, execute and analyze the results
+from an exploratory experiment, which aimed at the validation of the CodeForest
+plug-in and its integration into the Eclipse IDE environment.
+
+In order to do that, it was necessary to reimplement the proof-of-concept
+program (detailed in Chapter~\ref{ch:forest}) as a plug-in of an Integrated
+Development Environment. In this research, we chose the Eclipse platform to
+be the hosting system of our plug-in; the motivation behind this choice,
+architectural details and technical decisions are explained in
+Chapter~\ref{ch:plugin}.
+
+After each experiment, an interview was performed with each participant. We
+asked their opinion and did a brainstorm on further ways to improve the tool. We
+checked how they utilized the plug-in; whether or not they successfully
+completed the task, along with other thoughts about the whole process. All this
+data was individually analised (Section~\ref{sec:experiments}) and grouped into
+charts (Section~\ref{sec:answers}).
+
+We gathered together the results from the validation experiment and the
+remaining three experiments. As previously explained, we chose this approach not
+to conduct a meticulous experiment, but rather to evaluate the way developers
+utilize the plug-in and to seek ways of improving it. Of four participants, two
+of them were able to find the defect.
+It is possible that this outcome is related to the fact that both of them had
+professional experience in jobs that required debugging and correcting code that
+was not written by them. The other two participants---which did not have any
+professional experience---could not find the line of code that originated the
+defect, though they were able to point the correct class and a method that was
+part of the chain of invocation that caused the defect.
+
+Both groups of participants heavily relied on the roadmap to investigate the
+defect, and spent a considerable amount of time exploring the CodeForest.
+Overall opinion about the plug-in was quite positive, and few aspects of the
+software requires adjustments; for example, the way users explore the forest
+and the tactic of positioning methods according to their suspiciousness score.
+
+There are threats to the validity of this research, though. One is that the
+experiment here described is exploratory, which limits the range of our
+findings; another is that all participants are part of the same research group,
+which could introduce bias into our results.
+
+The following chapter summarizes this research and draws conclusions about it.
+We also point directions in which one could extend this work.

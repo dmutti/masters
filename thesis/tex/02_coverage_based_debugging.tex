@@ -1,0 +1,257 @@
+\newcommand{\bl}{%
+$\bullet$
+}
+Code coverage information is utilized by heuristics to calculate the
+suspiciousness of components. After assigning a suspiciousness value to these
+components, a classification list of components in descending order of
+suspiciousness is generated.
+
+Thus, the heuristics used to elect suspicious excerpts of code are a pivotal
+issue in coverage based debugging. Several heuristics have been proposed or
+utilized to indicate components (statements, predicates, def-use associations,
+methods or MCPs) most likely to contain faults. Ranking
+heuristics---characterized by identifying suspicious code excerpts from the
+frequency of executed components in passing and failing test cases---are
+prevalent.
+There are ranking heuristics created specifically for fault localization
+\cite{jones2002visualization,Wong2007}, while others have been adapted from
+areas such as Molecular Biology \cite{Abreu2007,gonzalez2007}.
+
+In what follows, debugging techniques based on code coverage are described.
+Firstly, techniques that utilize unit code coverage are presented, then the use
+of integration coverage in fault localization is discussed.
+
+\subsection{Unit coverage debugging}
+
+The \textit{Tarantula} heuristic~\cite{jones2002visualization} is one of the first ranking
+heuristics utilized to assign suspiciousness values to program statements. For
+each component, Tarantula calculates the frequency that a component is executed
+in failing test cases and divides it by the frequency that this
+component is executed in failing and passing test cases.
+
+Tarantula's formula $H_{T}$ is shown below in Equation~\ref{eq:tarantula}:
+$c_{ef}$ indicates the number of times that a component ($c$) is executed ($e$)
+in failing ($f$) test cases, $c_{nf}$ is the number of times that a
+component is not ($n$) executed in failing ($f$) test cases,
+$c_{ep}$ is the number of times that a component is executed ($e$) by a
+passing ($p$) test case and $c_{np}$ represents the number of times
+that a component is not ($n$) executed by passing ($p$) test
+cases.
+
+\begin{equation} \label{eq:tarantula}
+ H_{T} = \frac{\frac{c_{ef}}{c_{ef} + c_{nf}}}{\frac{c_{ef}}{c_{ef} + c_{nf}} + \frac{c_{ep}}{c_{ep} + c_{np}}}
+\end{equation}
+
+
+
+Table~\ref{tab-cov-tarantula} presents the statement and node coverage, the
+outcome of each test presented in Table~\ref{tab-casoteste-tarantula}  and the
+values of the coefficients utilized to determine the suspiciousness using
+Tarantula. The suspiciousness value for lines 3 and 4 is 0.5 and for the rest of the lines
+is 0.33 or 0. Therefore, lines 3 and 4 (i.e., node 1) are the most suspicious
+statements according to Tarantula. Other heuristics utilize the
+same coefficients with different formulae to determine the suspiciousness values.
+
+\begin{table}
+\center
+\caption{Statement and node coverage of program \textit{max}.\label{tab-cov-tarantula}}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+ \hline Line & Statement & Node &$t_1$ & $t_2$ & $t_3$ & $t_4$ & $t_5$ &
+ $c_{np}$ & $c_{ep}$ & $c_{nf}$ & $c_{ef}$ & $H_{T}$ \\
+ \hline 1 & - & - & \bl & \bl & \bl & \bl & \bl & 0 & 3 & 0 & 2 & 0.5\\
+ \hline 2 & - & 1 & \bl & \bl & \bl & \bl & \bl & 0 & 3 & 0 & 2 & 0.5\\
+ \hline 3 & 1 & 1 & \bl & \bl & \bl & \bl & \bl & 0 & 3 & 0 & 2 & 0.5\\
+ \hline 4 & 2 & 1 & \bl & \bl & \bl & \bl & \bl & 0 & 3 & 0 & 2 & 0.5\\
+ \hline 5 & 3 & 2 & \bl & \bl & \bl & \bl &     & 0 & 3 & 1 & 1 & 0.33\\
+ \hline 6 & - & 3 & \bl & \bl & \bl & \bl &     & 0 & 3 & 1 & 1 & 0.33\\
+ \hline 7 & 4 & 3 & \bl & \bl & \bl & \bl &     & 0 & 3 & 1 & 1 & 0.33\\
+ \hline 8 & 5 & 4 & \bl & \bl & \bl &     &     & 0 & 3 & 2 & 0 & 0\\
+ \hline 9 & 6 & 5 & \bl & \bl & \bl & \bl &     & 0 & 3 & 1 & 1 & 0.33\\
+ \hline 10 & - & 5 & \bl & \bl & \bl & \bl &     & 0 & 3 & 1 & 1 & 0.33\\
+ \hline 11 & 7 & 6 & \bl & \bl & \bl & \bl &     & 0 & 3 & 1 & 1 & 0.33\\
+ \hline 12 & - & 6 & \bl & \bl & \bl & \bl &     & 0 & 3 & 1 & 1 & 0.33\\
+  \hline - & - & - & Pass & Pass & Pass & Fail & Fail & - & - & - & - & - \\
+  \hline
+\end{tabular}
+\end{table}
+
+\subsection{Integration coverage debugging}
+
+A limitation of the current ranking heuristics is the lack of guidance to search
+for faults in larger portions of code since they assign suspiciousness values
+only to statements. Parnin and Orso \cite{parnin2011automated} performed experiments with
+a group of developers using Tarantula and observed that  developers take into
+account their knowledge of the code to search for faults without usually
+following Tarantula's classification. In this sense, the results suggest that
+contextual guidance might be helpful to coverage based debugging.
+
+We discuss below two approaches that utilize integration coverage to provide
+contextual support in the search for bugs.
+
+\subsubsection{Code hierarchy}
+
+Souza~\cite{souza2012depuracao} proposed a search heuristic called \textit{code
+hierarchy} (CH) that attributes suspiciousness values to packages, classes and methods. The CH
+suspiciousness value is given by a pair (\textit{susp}, \textit{number}) where
+\textit{susp} is the highest suspiciousness value assigned to a node belonging
+to the program entity (package, class or method) and \textit{number} is the
+number of nodes which has that suspiciousness value.
+
+Algorithm~\ref{alg-CH} shows how the CH value is assigned to classes. It
+requires that the suspiciousness values of the nodes be previously determined.
+From now on, the suspiciousness values assigned to nodes are determined by
+utilizing Tarantula, although any other ranking heuristic
+\cite{Wong2007,Abreu2007,gonzalez2007} can be used as well. The algorithms to
+calculate CH values to packages and methods are similar.
+
+
+Packages, classes, and methods are firstly ordered by their \textit{susp}
+value and then inversely by the \textit{number} value. CH
+establishes that the \textit{susp} value is the most important factor for fault
+localization. Thus, if a method has only one node with the highest
+suspiciousness value, it should be investigated first. In case of a draw, the
+number of nodes with the same \textit{susp} value decides which is the next
+entity to be investigated. The smaller the ``number'', the better. In case of a
+double draw, the next entity is decided randomly.
+
+%code hierarchy
+\begin{algorithm}
+\KwIn{A list of nodes and a list of classes (\textit{node\-List}, \textit{classList})}
+\KwOut{A list of classes with CH values (\textit{susp}, \textit{number})
+assigned}
+\BlankLine
+
+\ForEach{$class$ \textbf{in} $classList$}
+{
+  \ForEach{$node$ \textbf{in} $nodeList$}
+  {
+    \If{$node$.class = $class$}{
+      \If{$node$.susp $>$ $class$.susp}{
+    $class$.susp $\leftarrow$ $node$.susp\;
+    $class$.number $\leftarrow$ 1\;
+      }
+      \ElseIf{$node$.susp = $class$.susp}{
+    $class$.number++\;
+      }
+    }
+  }
+}
+\Return{$classList$}\;
+\caption{Assignment of CH values to classes}
+\label{alg-CH}
+\end{algorithm}
+
+In our visual representation of programs, we utilize CH suspiciousness values
+to determine the positioning and coloring of packages, classes, and methods.
+
+\subsubsection{Creating roadmaps for fault localization}
+
+Souza~\cite{souza2012depuracao} proposed  to add contextual information to
+support fault localization by creating roadmaps from the ranking of the MCP
+coverage.  The roadmap, referred to as R-MCP, is a simplified guide to be used
+when searching for faults. It is determined according to the following steps.
+\begin{enumerate}
+\item Pairs of methods (MCPs) are tracked during the execution of each test case.
+\item MCP coverage collected during the test suite execution is used to assign
+suspiciousness values to each MCP.  Any ranking heuristic can be used with this purpose. In the case of using Tarantula,  coverage data regarding pairs of methods (MCPs) are  the components  of the  formula presented in Equation~\ref{eq:tarantula}. % We have chosen to use Tarantula because it was one of the first ranking heuristics proposed; nevertheless, any other heuristic could have been used as well.
+\item A list of MCPs sorted by suspiciousness is created. MCPs with the same suspiciousness values are sorted by their  order of occurrence in the execution.
+\item R-MCP is created by visiting  the MCP list from the top ranked elements to the least ranked ones, and from the caller method to the callee method. The caller method  and the callee method of each visited pair  is verified in this order. If a method is not yet in the roadmap, it is  added to it with the same suspiciousness value assigned to the visited pair. Thus, the roadmap contains each method executed in the test suite with its highest suspiciousness in the MCP  list.
+
+\end{enumerate}
+
+Consider that an MCP (\textit{A.methodA},\textit{B.methodB}) is executed in 4
+out of 10 test cases that fail and it is executed only in 2 test cases that pass
+in a total of 90 successful test cases. Thus,  coefficients $c_{ef}$, $c_{nf}$,
+$c_{ep}$, and $c_{np}$ of  equation~\ref{eq:tarantula} will be, respectively, 4,
+6, 2, and 88. As a result, the Tarantula suspiciousness value ($H_T$) will be
+0.941 for MCP (\textit{A.methodA},\textit{B.methodB}).  Once all MCPs have been
+assigned  their $H_T$, they are sorted in decreasing order; the list of sorted
+MCPs is then used to create the roadmap. During R-MCP creation, if
+\textit{A.methodA} is  not in the roadmap yet, it is inserted in  R-MCP with
+assigned suspiciouness 0.941. Next,  \textit{B.methodB} is checked. If not yet
+in R-MCP, \textit{B.methodB} is also inserted with suspiciousness 0.941.
+
+The rationale to create R-MCP is based on a developer using a sorted MCP list to
+search for faults: the developer looks at the top MCP of the list and examines
+the  caller method. If it does not contain the bug, he/she looks at the callee
+method.  If the bug is not discovered by visiting the methods of the top MCP,
+the search proceeds by inspecting the methods of the following MCPs.
+When checking an MCP, if a method is seen anew, the developer does not inspect
+the method again. Instead, he/she skips the method and proceeds with the next
+not inspected method until finding the bug.
+
+Therefore, R-MCP is composed of each method in the MCP list with its highest
+suspiciousness value. Methods that appear in more than one pair in the MCP list
+are included only once in R-MCP. Thus, by  using R-MCP, methods are not checked
+repeatedly. Table~\ref{tab:rmcp-commons} presents an example of R-MCP generated
+for a faulty version of the Apache Commons-Math program
+\cite{souza2012depuracao}.
+
+\begin{table}[h]
+\center
+  \caption{R-MCP roadmap for Commons-Math AE\_AK\_1 bug.}
+  \label{tab:rmcp-commons}
+  \begin{tabular}{l|r}
+    \hline \textbf{method} & \textbf{suspiciousness} \\
+    %\arrayrulecolor{black}
+    \hline %\rowcolor[cmyk]{0.3,0.1,0,0}
+    {getCovariances} & {$0.9985037$} \\
+    \hline getAllParameters & $0.9985037$ \\
+    \hline getMeasurements & $0.9985037$ \\
+    \hline EstimatedParameter & $0.997012$ \\
+    \hline getName & $0.9960199$ \\
+    \hline solve & $0.9955246$ \\
+    \hline buildMessage & $0.9955246$ \\
+    \hline MathException & $0.9955246$ \\
+    \hline EstimationException & $0.9955246$ \\
+    \hline updateJacobian & $0.9950298$ \\
+    \hline GaussNewtonEstimator & $0.9930556$ \\
+    \hline estimate & $0.9930556$ \\
+    \hline SimpleEstimationProblem & $0.9930556$ \\
+    \hline getUnboundParameters & $0.9930556$ \\
+    \hline addParameter & $0.9930556$ \\
+    \hline addMeasurement & $0.9930556$ \\
+    \hline
+  \end{tabular}
+\end{table}
+
+The R-MCP's underlying intuition is that the developer will start the
+exploration of the code by the top ranked methods. When visiting a particular
+method, he/she will resort to unit coverage debugging to investigate the method.
+In debugging Commons-Math bug  AE\_AK\_1, the developer would start by the
+method \textit{getCovariances()} and then move to the next ones until finding
+the bug site. In failing to do so, the developer will need to resort to another
+debugging technique.
+
+In most cases, a method is composed of nodes that are classified with different
+suspiciousness values.
+The delta suspiciousness ($\Delta_{s}$) is a strategy proposed to deal with this
+issue. The idea is  to investigate nodes with suspiciousness values slightly
+lower than the method suspiciousness. The aim is to include  the bug in the set
+of nodes to be investigated without growing excessively the number of nodes to
+examine.
+
+Thus, a developer will inspect nodes with suspiciousness values equal to or
+greater than $\Delta_{s}$. The formula of $\Delta_{s}$ is shown in
+Equation~\ref{eq-delta}. $M_{s}$ is the method suspiciousness value and $p$ is
+the percentual value used.
+
+\begin{equation}
+\label{eq-delta}
+ \text{$\Delta_{s}$} = M_s * (1 - p)
+\end{equation}
+
+Souza and Chaim~\cite{souza13adding} showed that by using $\Delta_{s}$ with $p =
+3\%$ less code is investigated in comparison to a strategy using Tarantula and
+node coverage. In debugging Commons-Math bug  AE\_AK\_1, only nodes with
+suspiciousness $0.9985037 (1-0.03)$, i.e., $0.96854859$, will be investigated
+during the exploration of \textit{getCovariances()} with the delta suspiciousness
+strategy. By doing so, the authors expect to reduce the number of inspected
+nodes by visited method.
+
+In Chapter~\ref{ch:forest}, we will present how the suspiciousness values of
+nodes, methods, and classes are mapped into a visual metaphor. The
+implementation of the R-MCP roadmap in the plugin for fault localization based
+on the visual metaphor is discussed in Chapter~\ref{ch:plugin}.
+
+In what follows, the concepts regarding information visualization are described.

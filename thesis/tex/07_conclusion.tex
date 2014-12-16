@@ -1,0 +1,131 @@
+In this chapter, we present the summary of the results achieved, our
+contributions, and the future work.
+
+\section{Summary}
+
+Throughout the last three decades, several metaphors have been proposed and
+adapted with the purpose of displaying source code. In 1997, Jim Foley expressed
+his disappointment with the lack of impact of Software Visualization
+techniques~\cite{stasko1997software} used as a means to debug programs and
+systems. He had hope that, in the near future, these techniques would have had
+their apex, transforming the Software Engineering field. Our research revealed
+that, although several visualizations have been developed, most of them are
+poorly suited to the task of debugging.
+
+This research approached the area of debugging due to its importance in our
+digital world. In a planet that is more interconnected by systems than the day
+before, delivering and maintaining software with few or no defects became a
+worldwide concern. Recent studies estimate the global cost of debugging in more
+that 312 billion of dollars a year~\cite{britton2013reversible}. This number
+makes imperative that better debugging tools need to be developed.
+
+Our goal is to design and implement a visualization metaphor capable of helping
+developers to investigate defects more effectively. For that task, we created
+the CodeForest metaphor, whose rationale is to display parts of the codebase that
+were executed by unit tests as elements of a forest.
+
+The metaphor maps classes into cacti, methods into branches, and lines of code
+into thorns. The application of the heuristic developed
+by~\cite{souza2012depuracao} associates every element with a score, ranging from
+zero (lowest suspicion) to one (highest suspicion). This score expresses the
+chance of one given element to contain (in the case of a class or a method) or
+to be the cause (a line of code) of a defect.
+
+The CodeForest metaphor was implemented as a plug-in of the Eclipse Integrated
+Development Environment. This choice was motivated by the features provided by
+the platform---code editor, compiler, debugger, and unit-test runner---but also
+by its wide popularity amongst professional developers. This job was not
+trivial; it demanded decisions such as: the most adequate 3D engine, how to turn
+a concept into a tool to debug, which mechanisms of the hosting platform the plug-in
+should mix with, and what is the best strategy to pack and distribute it.
+
+To validate our novel tool, we planned and executed an exploratory experiment.
+Four volunteers---all members of the SAEG research group---took part in the
+tests. The experiment was modeled as follows: two frameworks were presented to
+participants---Thoughtworks XStream and Apache Commons Math---both of them with
+one defect. After a short training session, volunteers would have a first round
+of sixty minutes and a second one of thirty minutes to spot the line that
+triggered the failure in JUnit tests. Participants were not obliged to use the
+plug-in, remaining free to investigate the frameworks using their technique of
+choice.
+
+Every participant utilized the CodeForest; two of them---the ones with
+professional background---were able to spot the defect, whilst the other two
+volunteers did not complete the task. Users had a positive perception of the
+tool, reporting few complaints. According to them, the navigation through the
+elements of the forest did not flow as they expected to; they also reacted
+negatively to our strategy of setting the position of branches (methods) in a
+cactus. These branches were organized according to their score: the higher the
+score, the closer the branch is to the ground.
+
+The experiment revealed that the tool is capable of aiding developers with and
+without previous experience. Users with low or no experience utilized the
+roadmap together with the virtual 3D environment to investigate the defect.
+More experienced users utilized the roadmap as a guide to narrow their search of
+which parts of the source code should be inspected.
+
+This research is not free of threats to its validity, which can be of four
+kinds: external, internal, construct and conclusion. The threat to external
+validity is that our results cannot be generalized beyond the group of
+volunteers that took part in the experiment. The threat to internal validity
+comes from the fact that the experiment is influenced by the previous experience
+of participants; moreover they were all part of the same research group.
+Finally, we claim that there are no threats to the conclusion validity neither
+the construct validity, due to the nature of our experiment: an
+exploratory experiment. It was not our intent to measure whether theory and
+observation behaved accordingly to what was expected (construct validity) nor to
+attribute causality (conclusion validity).
+
+\section{Contributions}
+
+This research gave origin to several contributions in the context of
+visualization of coverage based debugging information that are described below:
+
+\begin{itemize}
+    \item A novel three-dimensional metaphor---CodeForest---which aims at
+    representing suspiciousness data obtained from coverage based debugging
+    techniques.
+    \item An extensive literature review. This research compiled a thorough
+literature review of 2D and 3D methods to visualize software data. In this
+process, we extracted important aspects from the analyzed papers: the concept
+(``what, conceptually, are the authors trying to achieve?''), how the concept
+was implemented, which aspects are covered by the research (structure, behavior,
+and evolution), the number of dimensions (2D or 3D), and the target audience
+(developers, stakeholders or system administrators).
+    \item A fully functional prototype. The prototype described in
+Chapter~\ref{ch:forest}, besides being used to validate our rationale about the
+metaphor, was also utilized by other researchers of the Software Analysis \&
+Experimentation Group (SAEG) to perform experiments and produce results.
+    \item A plug-in targeted to the Eclipse IDE that utilizes several of the
+    underlying platform resources, which is already being extended to serve
+    other purposes, mainly as the foundation of a system to explore other
+    debugging techniques.
+    \item An exploratory experiment, in which we assessed the adequacy of our
+    new CodeForest metaphor in the activity of investigating defects.
+\end{itemize}
+
+\section{Future work}
+
+Despite of the promising results, there is room for improvement. CodeForest
+requires a stronger validation, done preferably via a quantitative experiment.
+In this new experiment, participants should have different profiles and varied
+knowledge in Java, so they could be separated into different groups. The
+training session that happens before the experiment needs improvement; it could
+be divided into, at least, four sessions: one for Eclipse, other for debugging
+techniques, another for JUnit and a final session on the CodeForest plug-in.
+
+To improve filtering capabilities, the codebase could be indexed using an
+information retrieval framework such as Apache Lucene~\cite{lucene2005apache}.
+Amongst its capabilities, Lucene allows users to to perform many powerful query
+types: phrase queries, wildcard queries, proximity queries, range queries, etc.
+This feature could empower users to perform queries such as ``throws exception
+and method not static'', which we believe would help developers to reach the
+defect location in less time. The tool could also use a faster 3D engine and
+better instrumentation logs, both of them required before engaging into another
+round of experiments.
+
+As a concluding remark, the plug-in will reach its full effectiveness after the
+integration with external dependencies (Section~\ref{sec:dependencies}) is
+completed. This will enable developers to perform changes in the source code and
+immediately get the feedback from a new forest, generated by the ICD/InSS after
+unit tests are run.

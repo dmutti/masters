@@ -1,0 +1,177 @@
+\documentclass[normaltoc,espacoumemeio,pnumromarab,ruledheader]{abnt}     
+
+\newcommand{\oautor}{Danilo Mutti}
+\newcommand{\otitulo}{Coverage based debugging visualization}
+\newcommand{\okw}{Code Cactus; Code Forest; Object Oriented Development; Debugging; Java3D; Java; Infovis}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[english]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{afterpage}
+\usepackage{amsmath}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{theorem}
+\usepackage{pbox}
+\usepackage{fancyhdr}
+\usepackage{epsf}
+%\usepackage{graphicx}
+\usepackage[tight,footnotesize]{subfigure}
+\usepackage[linesnumbered,boxed,vlined,english]{algorithm2e}
+
+\usepackage{rotating} % UTILIZADO PELO AMBIENTE SIDEWAYTABLE PARA TABELAS GIRADAS DE 90o
+\usepackage{booktabs} % ALTERA O LAYOUT DE TABELAS
+\usepackage{longtable} % CRIA TABELAS EM MAIS DE UMA PÁGINA
+\usepackage{float} % MELHORA O POSICIONAMENTO DE OBJETOS FLOAT COMO FIGURAS E TABELAS
+\usepackage[format=hang,font=it,justification=centerlast,labelfont=bf,labelsep=endash]{caption} % FORMATA A LEGENDA DE TABELAS E FIGURAS
+
+\usepackage{hhline}
+\usepackage{epstopdf}
+\usepackage{color, soul}
+\usepackage{pgfgantt}
+\usepackage{tabularx}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multicol,caption}
+\usepackage{multirow}
+\usepackage[normalem]{ulem}%http://www.ling.ohio-state.edu/~jonsafari/latex/
+%documentacao em http://www.tug.org/applications/hyperref/manual.html
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdfauthor={\oautor},
+  pdftitle={\otitulo},
+  pdfsubject={Software Engineering},
+  pdfkeywords={\okw},
+  pdfproducer={Texlipse},
+  pdfcreator={Texlipse}
+}
+\usepackage{pdfpages}
+\usepackage{bookmark}
+\usepackage{graphicx}
+\usepackage{bchart}
+\usepackage[output=pdf]{logo-each}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Additional ABNTex definitions.
+%\usepackage[disable=copyright,disable=biblabel]{ach2017}
+
+\newtheorem{theorem}{Teorema}
+\newtheorem{acknowledgement}{Acknowledgement}
+\newtheorem{axiom}{Axioma}
+\newtheorem{case}{Caso}
+\newtheorem{Propriedade}{Propriedade}
+\newtheorem{claim}{Claim}
+\newtheorem{conclusion}{Conclus\~ao}
+\newtheorem{condition}{Condi\c{c}\~ao}
+\newtheorem{conjecture}{Conjectura}
+\newtheorem{corollary}{Corol\'ario}
+\newtheorem{criterion}{Criterio}
+\newtheorem{definition}{Defini\c{c}\~ao}
+\newtheorem{example}{Exemplo}
+\newtheorem{exercise}{Exercise}
+\newtheorem{lemma}{Lema}
+\newtheorem{notation}{Notat\c{c}\~ao}
+\newtheorem{problem}{Problema}
+\newtheorem{proposition}{Proposi\c{c}\~ao}
+\newtheorem{remark}{Observa\c{c}\~ao}
+\newtheorem{solution}{Solu\c{c}\~ao}
+\newtheorem{summary}{Sum\'ario}
+\newenvironment{proof}[1][Demonstra\c{c}\~ao]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}\vspace{0.5cm}}
+\newcommand{\usp}{Universidade de S\~{a}o Paulo}
+\newcommand{\MakeIndex}{\textsl{MakeIndex}}
+\newcommand{\itemnorma}[1]{\textit{#1}}
+\newcommand{\ingles}[1]{\textsl{#1}}
+\newcommand{\bibTeX}{bib\kern-.13ex\TeX}%
+\newcommand{\abnt}{{\smaller ABNT}}%
+\newcommand{\report}{{\smaller REPORT}}%
+\newcommand{\xypic}{X\hspace*{-.2ex}\raisebox{-.5ex}{Y}-pic}%
+ %\newcommand{\ac}{\symbol{123}}  % abre chaves
+%\newcommand{\fc}{\symbol{125}}  % fecha chaves
+\newcommand{\bs}{\symbol{92}}   % barra invertida (backslash)
+\renewcommand{\ABNTtravessao}{}
+\setlength{\ABNTanapindent}{0cm}
+\renewcommand{\ABNTaposindicativoanap}
+                    {\protect\\[4mm]\protect\centering}
+
+\hyphenation{le-vels for-est}
+
+
+% ***************************************
+% *******Capa personalizada *************
+% ***************************************
+
+
+
+%---------------------------------------------------------------------
+
+\providecommand{\ABNTvarautordata}{}
+\let\oldautor\autor\relax
+\renewcommand{\autor}[2][] {%
+\renewcommand{\ABNTvarautordata}{#1}
+\oldautor{#2}}
+
+\renewcommand{\capa} {%
+\begin{titlepage}
+\makeheader
+\begin{center}
+\vfill
+{\Large\ABNTautordata}\\[2cm]
+{\LARGE\textbf{\ABNTtitulodata}}\\[2cm]
+\vfill
+{\large \ABNTlocaldata \\ \ABNTdatadata}
+\end{center}
+\end{titlepage}}
+
+% ***************************************
+% ****Folha de rosto personalizada ******
+% ***************************************
+
+
+\renewcommand{\folhaderosto}{
+\begin{titlepage}
+    \vfill
+    \begin{center}
+        {\large \ABNTautordata}\\[5cm]
+        {\LARGE \textbf{\ABNTtitulodata}}\\[5cm]
+        \hspace{.45\textwidth}
+        \begin{minipage}{.5\textwidth}
+        \begin{espacosimples}
+            \begin{small}
+                \ABNTcomentariodata
+                \\ \\
+                %Área de Concentração: \ABNTareadata
+%As duas linhas abaixo devem ser comentadas se não houver necessidade de opção
+                %\\
+                %Opção: \ABNTopcaodata
+%--------------------------------------------------------------------------------------------
+                \\
+                Orientador: \ABNTorientadordata
+%As duas linhas abaixo devem ser comentadas se não houver necessidade de co-orientador
+%                \\
+%                Co-orientador: \ABNTcoorientadordata
+%--------------------------------------------------------------------------------------------
+            \end{small}
+        \end{espacosimples}
+        \end{minipage}
+        \vfill
+        {\large \ABNTlocaldata \\ \ABNTdatadata}
+    \end{center}
+\end{titlepage}
+}
+
+%************************************
+%**** Definições das refêrencias*****
+%************************************
+
+%\usepackage[alf,abnt-and-type=&]{abntcite}
+%\setlength{\headheight}{15pt}
+\usepackage[alf,abnt-etal-cite=3,abnt-etal-list=0]{abntcite}
+\usepackage{abnt-UFPR}
+\newcommand*{\refname}{References}
+
+% **************** Meus Comandos *********************
+\newcommand{\superscript}[1]{\ensuremath{^{\textrm{#1}}}}
+\newcommand{\hlc}[2][yellow]{ {\sethlcolor{#1} \hl{#2}} }
+\newenvironment{Figure}{\par\medskip\noindent\minipage{\linewidth}}{\endminipage\par\medskip}

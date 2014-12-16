@@ -1,0 +1,177 @@
+% ********************************
+% ***** Início do Documento ******
+% ********************************
+
+\begin{document}
+
+% DADOS PARA CAPA E FOLHA DE ROSTO
+% Obs.: autor, título, local e data devem ser maiúsculas
+
+
+\instituicao{University of São Paulo\\School of Arts, Sciences and Humanities}
+\autor{DANILO MUTTI}
+
+\titulo{\otitulo}
+
+\orientador{Prof. Dr. Marcos Lordello Chaim}
+
+\pagenumbering{gobble}
+\comentario{Dissertation presented to the School of Arts, Sciences and
+Humanities, University of São Paulo to achieve the title of Master of Science
+by the Graduate Program in Information Systems.
+\\
+\\
+\\
+Corrected version containing the amendments requested by the judging commission
+on October 31, 2014. The original version is available at the reserved
+collection in the Library of EACH-USP and in the Digital Library of Theses and
+Dissertations of USP (BDTD), in accordance with resolution CoPGr 6018, October
+13, 2011.}
+
+\local{São Paulo}
+
+\data{2014}
+
+% ************* CAPA **************
+% ********* SEM NUMERAÇÃO *********
+\capa
+
+% ******** FOLHA DE ROSTO *********
+\folhaderosto
+
+\includepdf{pdfs/EACH_2013_M_SI_MUTTI_D_vc.pdf}
+%\newpage
+
+\begin{folhadeaprovacao}
+\pretextualchapter{}
+\begin{center}
+Approval Sheet
+\end{center}
+
+\noindent Master's Dissertation entitled
+\textit{\textquotedblleft\otitulo\textquotedblright}, defended by~\oautor~and
+approved on October 31, 2014 in São Paulo, State of São Paulo, by the judging
+commission composed of:
+
+\assinatura{Prof. Dr. Marcos Lordello Chaim \\ Chairman \\ School of
+Arts, Sciences and Humanities\\University of São Paulo}
+\assinatura{Prof. Dr. Manoel Gomes de Mendonça Neto \\ Department of
+Computer Sciences \\ Federal University of Bahia}
+\assinatura{Prof. Dr. João Luiz Bernardes Jr.\\  School of Arts, Sciences and
+Humanities \\ University of São Paulo}
+\end{folhadeaprovacao}
+
+% ********** DEDICATÓRIA **********
+% *********** OPCIONAL ************
+\pretextualchapter{}
+
+\vspace{12cm}
+\hspace{.3\textwidth}
+\begin{minipage}{.6\textwidth}
+    \par To everyone that supported me through this journey.
+    \par $\phantom{linha em branco}$
+    
+\end{minipage}
+
+\newpage
+
+%**************** ABSTRACT ***********************
+%Troque pelos seus dados os seguintes campos abaixo (mantendo a formatação e pontuação):
+%
+%SURNAME
+%FirstName1
+%MiddleName1
+%MiddleName2
+%Work title
+%Year1 (Ano de Depósito da Versão Final)
+%NumberOfPages
+%Year2 (Ano de Defesa)
+%
+%Mantenha todas as demais informações exatamente como estão.
+%
+%[Não usar em caso de qualificação]
+%
+%***************************************
+
+\begin{abstract}
+\noindent MUTTI, Danilo. \textbf{\otitulo}. 2014. 137 p. Dissertation (Master of
+Science) -- School of Arts, Sciences and Humanities, University of São Paulo, São Paulo, 2014.
+\newline
+
+\noindent Fault localization is a costly task in the debugging process. Usually,
+developers analyze failing test cases to search for faults in the program's
+code. Visualization techniques have been proposed to help developers grasp the
+source code and focus their attention onto locations more likely to contain
+bugs. In general, these techniques utilize two-dimensional visualization
+approaches. We introduce a three-dimentional visual metaphor, called
+\textit{CodeForest}, which represents a software as a cacti forest. In the
+CodeForest, nodes (sets of statements executed in sequence) are thorns, methods
+are branches, and classes are cacti.
+Heuristics---based on the frequency that lines of codes are executed in
+successful and failing test cases---are used to assign suspiciousness values to
+the elements (thorns, branches, and cacti) of the forest. The new metaphor was
+implemented as a plug-in targeted to the Eclipse Platform. This plug-in includes
+the mapping of suspiciousness values to elements of a virtual forest, a
+parameterized trimmer, which filters elements based on their score or text, and
+a list of most suspicious methods (also known as ``roadmap''), to guide the
+developer on his/her debugging session. An exploratory experiment was conducted;
+the results indicates that the tool supports developers with and without
+experience. Users with low or no experience utilized the roadmap and the virtual
+3D environment to investigate the defect.
+More experienced users prefer to use the roadmap as a guide to narrow which
+parts of the source code should be explored.
+
+\end{abstract}
+
+\par
+\vspace{2em}
+\noindent \textbf{Keywords}: Software visualization. Visualization of debugging
+information. Fault localization. Code coverage.
+
+
+\begin{resumo}
+\noindent MUTTI, Danilo. \textbf{Visualização de depuração baseada em
+cobertura}. 2014. 137 f. Dissertação (Mestrado em Ciências) -- Escola de Artes,
+Ciências e Humanidades, Universidade de São Paulo, São Paulo, 2014.
+\newline
+
+\noindent Localizar falhas é uma tarefa custosa do processo de depuração.
+Normalmente, os desenvolvedores analisam casos de teste que falham para procurar
+por defeitos no código fonte de um programa. Técnicas de visualização têm sido
+propostas para ajudar os desenvolvedores a entender o código fonte e focar sua
+atenção nos locais com a maior probabilidade de conterem defeitos. Geralmente,
+essas técnicas utilizam abordagens de visualização bidimensional. Nesse trabalho
+é introduzida uma metáfora visual em três dimensões, chamada
+\textit{CodeForest}, que representa um programa como uma floresta de cactus. Na
+\textit{CodeForest}, nós (conjunto de comandos executados em sequência) são
+representados como espinhos, métodos como galhos e classes como troncos.
+Para associar valores de suspeição aos elementos da floresta (espinhos, galhos e
+troncos) utilizam-se heurísticas, baseadas na frequência com que linhas de
+código são executadas em casos de teste finalizados com sucesso e com falha.
+A nova metáfora foi implementada como um complemento da plataforma Eclipse de
+desenvolvimento de programas. Esse complemento inclui o mapeamento dos valores
+de suspeição para elementos de uma floresta, uma ferramenta de poda
+parametrizada---que filtra elementos com base em seu texto e valor de
+suspeição---e uma lista dos métodos mais suspeitos (conhecida como ``roteiro'')
+para guiar o desenvolvedor em sua sessão de depuração. Um experimento
+exploratório foi conduzido e os resultados indicam que a ferramenta apoia a
+tarefa de depuração tanto de desenvolvedores experientes quanto inexperientes.
+Usuários com pouca ou nenhuma experiência utilizaram o roteiro e o ambiente
+virtual 3D para investigar o defeito. Usuários mais experientes preferiram
+utilizar o roteiro como um guia para restringir quais partes do código fonte
+deveriam ser exploradas.
+
+\end{resumo}
+
+\par
+\vspace{2em}
+\noindent \textbf{Palavras-chave}: Visualização de software. Visualização de
+informação de depuração. Localização de defeitos. Cobertura de código.
+
+%\newpage\null\thispagestyle{empty}\newpage
+
+%\pagenumbering{roman}
+% ************ SUMÁRIO ************
+\listoffigures
+\listoftables
+\tableofcontents
